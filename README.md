@@ -1,1 +1,19 @@
-# dig-doc
+# Dig Doc
+
+Dig Doc は主に 2 つの機能を提供します。
+
+- RAG を行うためのベクターストアの管理
+- OpenAI API に互換性のある API サーバー
+
+## ベクターストアの管理
+
+| データソース | 実装状況 |
+| --- | --- |
+| ローカルファイル | |
+| Confluence | |
+| Notion | |
+
+## API サーバー
+
+OpenAI API に互換性のある API を提供することで OpenAI API 互換のツールに結合できるようにします。
+主な用途は Cursor で、 `Override OpenAI Base URL` の設定を利用して独自の RAG を使えるようにすることです。
