@@ -1,0 +1,10 @@
+name: dig-doc
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    volumes:
+      - .:/app
+    tty: true
