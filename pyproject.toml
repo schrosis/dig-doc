@@ -1,0 +1,19 @@
+[project]
+name = "dig-doc"
+version = "0.0.1"
+description = "dig-doc"
+authors = []
+dependencies = []
+requires-python = "==3.13.*"
+readme = "README.md"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.3.3",
+]
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.scripts]
+test = "pytest"
