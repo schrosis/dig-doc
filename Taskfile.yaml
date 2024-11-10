@@ -1,0 +1,70 @@
+version: "3"
+
+silent: true
+
+tasks:
+  default:
+    desc: "help"
+    cmds:
+      - task: help
+
+  help:
+    desc: "show all tasks"
+    cmds:
+      - task --list-all --sort none
+
+  install:
+    desc: "install dependencies"
+    cmds:
+      - task: with-docker
+        vars:
+          SERVICE: dev
+          CALLBACK_TASK: install
+          COMMAND: |
+            pdm install
+
+  lint:
+    desc: "ruff check and mypy"
+    cmds:
+      - task: with-docker
+        vars:
+          SERVICE: dev
+          CALLBACK_TASK: lint
+          COMMAND: |
+            pdm run ruff check .
+            pdm run mypy .
+
+  lint:fix:
+    desc: "lint fix by ruff"
+    cmds:
+      - task: with-docker
+        vars:
+          SERVICE: dev
+          CALLBACK_TASK: lint:fix
+          COMMAND: |
+            pdm run ruff check . --fix
+
+  test:
+    desc: "test"
+    cmds:
+      - task: with-docker
+        vars:
+          SERVICE: dev
+          CALLBACK_TASK: test
+          COMMAND: |
+            pytest
+
+  with-docker:
+    internal: true
+    desc: コンテナ内からの実行だったらそのまま実行、コンテナ外だったらコンテナを起動して実行します
+    cmds:
+      - |
+        if [ -f /.dockerenv ]; then
+          {{.COMMAND}}
+        else
+          if docker compose ps {{.SERVICE}} | grep -q 'Up'; then
+            docker compose exec -T {{.SERVICE}} task {{.CALLBACK_TASK}}
+          else
+            docker compose run --rm -T {{.SERVICE}} task {{.CALLBACK_TASK}}
+          fi
+        fi

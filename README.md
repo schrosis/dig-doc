@@ -17,3 +17,8 @@ Dig Doc は主に 2 つの機能を提供します。
 
 OpenAI API に互換性のある API を提供することで OpenAI API 互換のツールに結合できるようにします。
 主な用途は Cursor で、 `Override OpenAI Base URL` の設定を利用して独自の RAG を使えるようにすることです。
+
+## Docs
+
+- [開発環境構築](docs/開発環境構築.md)
+- [Taskfile](docs/Taskfile.md)

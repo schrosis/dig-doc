@@ -1,24 +1,23 @@
+from collections.abc import Iterable
+
 from dotenv import load_dotenv
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import DirectoryLoader
+from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
-from langchain_core.runnables import RunnablePassthrough
+from langchain_core.runnables import Runnable, RunnablePassthrough
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
-def format_docs(docs):
-    return "\n\n".join(doc.page_content for doc in docs)
-
-
-def main():
+def main() -> None:
     load_dotenv()
-    question = input('Question?: ')
+    question = input("Question?: ")
 
     loader = DirectoryLoader(
-        '',
-        glob=['README.md', 'docs/**/*.md'],
+        "",
+        glob=["README.md", "docs/**/*.md"],
         recursive=True,
     )
 
@@ -31,16 +30,23 @@ def main():
     retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
     prompt = PromptTemplate(
         template="""
-You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
+You are an assistant for question-answering tasks.
+Use the following pieces of retrieved context to answer the question.
+If you don't know the answer, just say that you don't know.
+Use three sentences maximum and keep the answer concise.
+
 Question: {question}
 Context: {context}
 Answer:
         """,
-        input_variables=['context', 'question'],
+        input_variables=["context", "question"],
     )
     llm = ChatOpenAI(model="gpt-4o-mini")
 
-    rag_chain = (
+    def format_docs(docs: Iterable[Document]) -> str:
+        return "\n\n".join(doc.page_content for doc in docs)
+
+    rag_chain: Runnable = (
         {"context": retriever | format_docs, "question": RunnablePassthrough()}
         | prompt
         | llm
@@ -48,8 +54,8 @@ Answer:
     )
 
     answer = rag_chain.invoke(question)
-    print("Answer: ", answer)
+    print("Answer: ", answer)  # noqa: T201
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

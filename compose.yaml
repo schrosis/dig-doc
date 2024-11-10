@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: docker/dev/Dockerfile
+      target: dev
     volumes:
       - .:/app
     tty: true
