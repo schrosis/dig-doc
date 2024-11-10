@@ -16,7 +16,12 @@ tasks:
   install:
     desc: "install dependencies"
     cmds:
-      - pdm install
+      - task: with-docker
+        vars:
+          SERVICE: dev
+          CALLBACK_TASK: install
+          COMMAND: |
+            pdm install
 
   lint:
     desc: "ruff check and mypy"
