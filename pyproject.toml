@@ -21,6 +21,7 @@ test = [
 ]
 lint = [
     "ruff>=0.7.3",
+    "mypy>=1.13.0",
 ]
 
 [tool.pdm]

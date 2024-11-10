@@ -1,10 +1,12 @@
+from collections.abc import Iterable
+
 from dotenv import load_dotenv
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import DirectoryLoader
+from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
-from langchain_core.runnables import RunnablePassthrough
-from langchain_core.vectorstores import VectorStore
+from langchain_core.runnables import Runnable, RunnablePassthrough
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -41,10 +43,10 @@ Answer:
     )
     llm = ChatOpenAI(model="gpt-4o-mini")
 
-    def format_docs(docs: VectorStore) -> str:
+    def format_docs(docs: Iterable[Document]) -> str:
         return "\n\n".join(doc.page_content for doc in docs)
 
-    rag_chain = (
+    rag_chain: Runnable = (
         {"context": retriever | format_docs, "question": RunnablePassthrough()}
         | prompt
         | llm
