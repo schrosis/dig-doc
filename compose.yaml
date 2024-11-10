@@ -9,3 +9,11 @@ services:
     volumes:
       - .:/app
     tty: true
+    depends_on:
+      - chroma
+
+  chroma:
+    image: chromadb/chroma:latest
+    environment:
+      - CHROMA_SERVER_AUTHN_CREDENTIALS=${CHROMA_TOKEN}
+      - CHROMA_SERVER_AUTHN_PROVIDER=chromadb.auth.token_authn.TokenAuthenticationServerProvider

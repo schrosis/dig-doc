@@ -1,5 +1,8 @@
+import os
 from collections.abc import Iterable
 
+import chromadb
+from chromadb.config import Settings
 from dotenv import load_dotenv
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import DirectoryLoader
@@ -8,7 +11,6 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import Runnable, RunnablePassthrough
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 
 def main() -> None:
@@ -21,13 +23,26 @@ def main() -> None:
         recursive=True,
     )
 
-    docs = loader.load()
+    splits = loader.load_and_split()
 
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    splits = text_splitter.split_documents(docs)
-    vectorstore = Chroma.from_documents(documents=splits, embedding=OpenAIEmbeddings())
+    chroma_host = os.getenv("CHROMA_HOST")
+    assert chroma_host is not None  # noqa: S101
 
-    retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
+    client = chromadb.HttpClient(
+        host=chroma_host,
+        port=8000,
+        settings=Settings(
+            chroma_client_auth_provider="chromadb.auth.token_authn.TokenAuthClientProvider",
+            chroma_client_auth_credentials=os.getenv("CHROMA_TOKEN"),
+        ),
+    )
+    client.heartbeat()
+
+    vectorstore = Chroma("sample", OpenAIEmbeddings(), client=client)
+    vectorstore.reset_collection()
+    vectorstore.add_documents(splits)
+
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
     prompt = PromptTemplate(
         template="""
 You are an assistant for question-answering tasks.
