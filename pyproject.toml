@@ -3,7 +3,15 @@ name = "dig-doc"
 version = "0.0.1"
 description = "dig-doc"
 authors = []
-dependencies = []
+dependencies = [
+    "langchain>=0.3.7",
+    "langchain-community>=0.3.5",
+    "langchain-chroma>=0.1.4",
+    "langchain-openai>=0.2.6",
+    "unstructured[md]>=0.11.8",
+    "nltk==3.8.1",
+    "python-dotenv>=1.0.1",
+]
 requires-python = "==3.13.*"
 readme = "README.md"
 
