@@ -21,4 +21,4 @@ OpenAI API に互換性のある API を提供することで OpenAI API 互換�
 ## Docs
 
 - [開発環境構築](docs/開発環境構築.md)
-- [Taskfile](docs/Taskfile.md)
+- [Taskfile](docs/taskfile.md)
