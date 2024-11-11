@@ -23,6 +23,16 @@ tasks:
           COMMAND: |
             pdm install
 
+  pdm:
+    desc: "pdm command (task pdm -- args)"
+    cmds:
+      - task: with-docker
+        vars:
+          SERVICE: dev
+          CALLBACK_TASK: pdm
+          COMMAND: |
+            pdm {{.CLI_ARGS}}
+
   lint:
     desc: "ruff check and mypy"
     cmds:
@@ -63,8 +73,8 @@ tasks:
           {{.COMMAND}}
         else
           if docker compose ps {{.SERVICE}} | grep -q 'Up'; then
-            docker compose exec -T {{.SERVICE}} task {{.CALLBACK_TASK}}
+            docker compose exec -T {{.SERVICE}} task {{.CALLBACK_TASK}} -- {{.CLI_ARGS}}
           else
-            docker compose run --rm -T {{.SERVICE}} task {{.CALLBACK_TASK}}
+            docker compose run --rm -T {{.SERVICE}} task {{.CALLBACK_TASK}} -- {{.CLI_ARGS}}
           fi
         fi

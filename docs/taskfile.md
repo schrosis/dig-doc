@@ -10,6 +10,7 @@ task: Available tasks for this project:
 * default:        help
 * help:           show all tasks
 * install:        install dependencies
+* pdm:            pdm command (task pdm -- args)
 * lint:           ruff check and mypy
 * lint:fix:       lint fix by ruff
 * test:           test
