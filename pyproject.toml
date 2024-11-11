@@ -28,7 +28,7 @@ lint = [
 distribution = false
 
 [tool.pdm.scripts]
-test = "pytest"
+sample = "scripts/sample.py"
 
 [tool.ruff.lint]
 select = ["ALL"]
