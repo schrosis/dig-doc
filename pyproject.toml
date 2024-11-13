@@ -28,7 +28,8 @@ lint = [
 distribution = false
 
 [tool.pdm.scripts]
-sample = "scripts/sample.py"
+qa = "scripts/qa.py"
+recreate-vectorstore = "scripts/recreate_vectorstore.py"
 
 [tool.ruff.lint]
 select = ["ALL"]
