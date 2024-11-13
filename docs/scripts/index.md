@@ -1,4 +1,4 @@
 # スクリプト一覧
 
-- [サンプルスクリプト](sample.md)
+- [QA](qa.md)
 - [ベクターストアの再作成](recreate-vectorstore.md)

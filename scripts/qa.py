@@ -5,7 +5,6 @@ import chromadb
 from chromadb.config import Settings
 from dotenv import load_dotenv
 from langchain_chroma import Chroma
-from langchain_community.document_loaders import DirectoryLoader
 from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
@@ -16,14 +15,6 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 def main() -> None:
     load_dotenv()
     question = input("Question?: ")
-
-    loader = DirectoryLoader(
-        "",
-        glob=["README.md", "docs/**/*.md"],
-        recursive=True,
-    )
-
-    splits = loader.load_and_split()
 
     chroma_host = os.getenv("CHROMA_HOST")
     assert chroma_host is not None  # noqa: S101
@@ -39,8 +30,6 @@ def main() -> None:
     client.heartbeat()
 
     vectorstore = Chroma("sample", OpenAIEmbeddings(), client=client)
-    vectorstore.reset_collection()
-    vectorstore.add_documents(splits)
 
     retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
     prompt = PromptTemplate(
