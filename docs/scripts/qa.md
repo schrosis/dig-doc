@@ -8,7 +8,7 @@
 ## 実行方法
 
 ```sh
-pdm run scripts/qa.py
+pdm run qa
 # or
-# task pdm -- run scripts/qa.py
+# task pdm -- run qa
 ```
