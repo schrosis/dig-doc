@@ -17,10 +17,14 @@ def set_env_vars() -> Generator[None, Never, None]:
     os.environ["CHROMA_TOKEN"] = "test_token"
     yield
     # テストの後に環境変数を削除する
-    del os.environ["OPENAI_API_KEY"]
-    del os.environ["CHROMA_HOST"]
-    del os.environ["CHROMA_PORT"]
-    del os.environ["CHROMA_TOKEN"]
+    if "OPENAI_API_KEY" in os.environ:
+        del os.environ["OPENAI_API_KEY"]
+    if "CHROMA_HOST" in os.environ:
+        del os.environ["CHROMA_HOST"]
+    if "CHROMA_PORT" in os.environ:
+        del os.environ["CHROMA_PORT"]
+    if "CHROMA_TOKEN" in os.environ:
+        del os.environ["CHROMA_TOKEN"]
 
 def test_config_initialization() -> None:
     config = Config()
