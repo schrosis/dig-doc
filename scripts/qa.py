@@ -1,4 +1,3 @@
-import os
 from collections.abc import Iterable
 
 import chromadb
@@ -11,25 +10,29 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import Runnable, RunnablePassthrough
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
+from src.config import Config
+
 
 def main() -> None:
     load_dotenv()
+    config = Config()
     question = input("Question?: ")
 
-    chroma_host = os.getenv("CHROMA_HOST")
-    assert chroma_host is not None  # noqa: S101
-
     client = chromadb.HttpClient(
-        host=chroma_host,
-        port=8000,
+        host=config.chroma_host.get_secret_value(),
+        port=config.chroma_port.get_secret_value(),
         settings=Settings(
             chroma_client_auth_provider="chromadb.auth.token_authn.TokenAuthClientProvider",
-            chroma_client_auth_credentials=os.getenv("CHROMA_TOKEN"),
+            chroma_client_auth_credentials=config.chroma_token.get_secret_value(),
         ),
     )
     client.heartbeat()
 
-    vectorstore = Chroma("sample", OpenAIEmbeddings(), client=client)
+    vectorstore = Chroma(
+        "sample",
+        OpenAIEmbeddings(api_key=config.openai_api_key),
+        client=client,
+    )
 
     retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
     prompt = PromptTemplate(

@@ -6,7 +6,7 @@
 ## 実行方法
 
 ```sh
-pdm run scripts/recreate_vectorstore.py
+pdm run recreate-vectorstore
 # or
-# task pdm -- run scripts/recreate_vectorstore.py
+# task pdm -- run recreate-vectorstore
 ```

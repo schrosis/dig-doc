@@ -11,6 +11,7 @@ dependencies = [
     "unstructured[md]>=0.11.8",
     "nltk==3.8.1",
     "python-dotenv>=1.0.1",
+    "pydantic>=2.9.2",
 ]
 requires-python = "==3.13.*"
 readme = "README.md"
@@ -28,13 +29,20 @@ lint = [
 distribution = false
 
 [tool.pdm.scripts]
-qa = "scripts/qa.py"
-recreate-vectorstore = "scripts/recreate_vectorstore.py"
+qa = {cmd = "python scripts/qa.py", env = { PYTHONPATH = "." }}
+recreate-vectorstore = {cmd = "python scripts/recreate_vectorstore.py", env = { PYTHONPATH = "." }}
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["D"]
+ignore = [
+    "D",
+    "EM101",
+    "TRY003",
+]
 
 [tool.ruff.lint.per-file-ignores]
 "scripts/*.py" = ["INP001"]
-"tests/*.py" = ["S101"]
+"tests/*.py" = [
+    "S101",
+    "S105",
+]
