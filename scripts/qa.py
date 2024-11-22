@@ -1,9 +1,6 @@
 from collections.abc import Iterable
 
-import chromadb
-from chromadb.config import Settings
 from dotenv import load_dotenv
-from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
@@ -11,6 +8,7 @@ from langchain_core.runnables import Runnable, RunnablePassthrough
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 from src.config import Config
+from src.vectorstore import VectorStoreFactory
 
 
 def main() -> None:
@@ -18,20 +16,9 @@ def main() -> None:
     config = Config()
     question = input("Question?: ")
 
-    client = chromadb.HttpClient(
-        host=config.chroma_host.get_secret_value(),
-        port=config.chroma_port.get_secret_value(),
-        settings=Settings(
-            chroma_client_auth_provider="chromadb.auth.token_authn.TokenAuthClientProvider",
-            chroma_client_auth_credentials=config.chroma_token.get_secret_value(),
-        ),
-    )
-    client.heartbeat()
-
-    vectorstore = Chroma(
+    vectorstore = VectorStoreFactory(config.chroma_config).create(
         "sample",
-        OpenAIEmbeddings(api_key=config.openai_api_key),
-        client=client,
+        embeddings=OpenAIEmbeddings(api_key=config.openai_config.api_key),
     )
 
     retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
