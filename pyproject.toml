@@ -12,6 +12,8 @@ dependencies = [
     "nltk==3.8.1",
     "python-dotenv>=1.0.1",
     "pydantic>=2.9.2",
+    "fastapi>=0.115.5",
+    "uvicorn>=0.32.1",
 ]
 requires-python = "==3.13.*"
 readme = "README.md"
@@ -31,6 +33,7 @@ distribution = false
 [tool.pdm.scripts]
 qa = {cmd = "python scripts/qa.py", env = { PYTHONPATH = "." }}
 recreate-vectorstore = {cmd = "python scripts/recreate_vectorstore.py", env = { PYTHONPATH = "." }}
+api = {cmd = "uvicorn src.api.main:app --host 0.0.0.0 --port 80"}
 
 [tool.ruff.lint]
 select = ["ALL"]
