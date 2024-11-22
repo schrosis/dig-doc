@@ -28,11 +28,10 @@ def set_env_vars() -> Generator[None, Never, None]:
 
 def test_config_initialization() -> None:
     config = Config()
-    assert config.openai_api_key == SecretStr("test_key")
-    assert config.chroma_host == SecretStr("test_host")
-    assert config.chroma_port == Secret(8000)
-    assert config.chroma_token == SecretStr("test_token")
-
+    assert config.openai_config.api_key == SecretStr("test_key")
+    assert config.chroma_config.host == SecretStr("test_host")
+    assert config.chroma_config.port == Secret(8000)
+    assert config.chroma_config.token == SecretStr("test_token")
 
 @pytest.mark.parametrize(
     ("env_var"),
